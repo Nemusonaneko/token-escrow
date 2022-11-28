@@ -63,7 +63,6 @@ contract TokenEscrow {
             _amount,
             _release
         );
-        if (block.timestamp >= _release) revert INVALID_TIME();
         if (active[id] == 1) revert IS_ACTIVE();
 
         active[id] = 1;
