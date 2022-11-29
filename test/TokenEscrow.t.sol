@@ -33,4 +33,12 @@ contract TokenEscrowTest is Test {
         vm.warp(100000);
         escrow.redeem(address(llamaToken), alice, bob, 1000 * 1e18, 50000);
     }
+
+    function testRevoke() external {
+        vm.startPrank(alice);
+        llamaToken.approve(address(escrow), 1000 * 1e18);
+        escrow.create(address(llamaToken), bob, 1000 * 1e18, 50000);
+        escrow.revoke(address(llamaToken), bob, 1000 * 1e18, 50000);
+        vm.stopPrank();
+    }
 }

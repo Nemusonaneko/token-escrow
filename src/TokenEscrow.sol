@@ -3,12 +3,13 @@ pragma solidity ^0.8.17;
 
 import {ERC20} from "solmate/tokens/ERC20.sol";
 import {SafeTransferLib} from "solmate/utils/SafeTransferLib.sol";
+import "./BoringBatchable.sol";
 
 error IS_ACTIVE();
 error NOT_ACTIVE();
 error INVALID_TIME();
 
-contract TokenEscrow {
+contract TokenEscrow is BoringBatchable {
     using SafeTransferLib for ERC20;
 
     event Create(
@@ -108,7 +109,7 @@ contract TokenEscrow {
         );
         if (active[id] == 0) revert NOT_ACTIVE();
         active[id] = 0;
-        ERC20(_token).safeTransfer(_payee, _amount);
+        ERC20(_token).safeTransfer(msg.sender, _amount);
 
         emit Revoke(_token, msg.sender, _payee, _amount, _release);
     }
