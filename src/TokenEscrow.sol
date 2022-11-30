@@ -17,7 +17,8 @@ contract TokenEscrow is BoringBatchable {
         address payer,
         address payee,
         uint256 amount,
-        uint256 release
+        uint256 release,
+        bytes32 id
     );
 
     event Redeem(
@@ -25,7 +26,8 @@ contract TokenEscrow is BoringBatchable {
         address payer,
         address payee,
         uint256 amount,
-        uint256 release
+        uint256 release,
+        bytes32 id
     );
 
     event Revoke(
@@ -33,7 +35,8 @@ contract TokenEscrow is BoringBatchable {
         address payer,
         address payee,
         uint256 amount,
-        uint256 release
+        uint256 release,
+        bytes32 id
     );
 
     mapping(bytes32 => uint256) public active;
@@ -69,7 +72,7 @@ contract TokenEscrow is BoringBatchable {
         active[id] = 1;
         ERC20(_token).safeTransferFrom(msg.sender, address(this), _amount);
 
-        emit Create(_token, msg.sender, _payee, _amount, _release);
+        emit Create(_token, msg.sender, _payee, _amount, _release, id);
     }
 
     function redeem(
@@ -91,7 +94,7 @@ contract TokenEscrow is BoringBatchable {
         active[id] = 0;
         ERC20(_token).safeTransfer(_payee, _amount);
 
-        emit Redeem(_token, _payer, _payee, _amount, _release);
+        emit Redeem(_token, _payer, _payee, _amount, _release, id);
     }
 
     function revoke(
@@ -111,6 +114,6 @@ contract TokenEscrow is BoringBatchable {
         active[id] = 0;
         ERC20(_token).safeTransfer(msg.sender, _amount);
 
-        emit Revoke(_token, msg.sender, _payee, _amount, _release);
+        emit Revoke(_token, msg.sender, _payee, _amount, _release, id);
     }
 }
